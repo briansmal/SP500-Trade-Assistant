@@ -1,1 +1,40 @@
-async function load(){const r=await fetch('/api/dashboard');const d=await r.json();document.getElementById('bias').textContent=d.spBias+' ('+d.confidence+'%)';document.getElementById('vix').textContent=d.vix+' '+d.vixRisk;document.getElementById('sp').textContent=d.sp500;document.getElementById('regime').textContent=d.regime;document.getElementById('div').textContent=d.divergence;document.getElementById('action').textContent=d.action;} load(); setInterval(load,60000);
+async function updateDashboard() {
+
+    try {
+
+        const response =
+            await fetch('/api/dashboard');
+
+        const data =
+            await response.json();
+
+        document.getElementById('bias')
+            .innerHTML =
+            data.bias;
+
+        document.getElementById('action')
+            .innerHTML =
+            data.action;
+
+        document.getElementById('sp500')
+            .innerHTML =
+            data.sp500;
+
+    } catch(error) {
+
+        console.error(error);
+
+        document.getElementById('bias')
+            .innerHTML =
+            'DATA ERROR';
+
+    }
+
+}
+
+updateDashboard();
+
+setInterval(
+    updateDashboard,
+    60000
+);
