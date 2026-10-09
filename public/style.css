@@ -1,1 +1,23 @@
-body{background:#111;color:#fff;font-family:Arial;padding:20px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px}.card{background:#222;padding:20px;border-radius:10px}#bias,#action{font-size:32px;font-weight:bold}
+body{
+    background:#0f1117;
+    color:white;
+    font-family:Segoe UI,Arial;
+    margin:30px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+}
+
+.card{
+    background:#1c1f26;
+    border-radius:12px;
+    padding:20px;
+}
+
+.card div{
+    font-size:32px;
+    font-weight:bold;
+}
