@@ -1,1 +1,1 @@
-body{font-family:Segoe UI,Arial;background:#111;color:#fff;text-align:center} .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:15px;padding:20px}.card{background:#222;border-radius:12px;padding:20px}.big{font-size:2rem;font-weight:bold}.green{color:#00d26a}.red{color:#ff5a5a}.yellow{color:#ffd54a}
+body{background:#111;color:#fff;font-family:Segoe UI,sans-serif;text-align:center}.card{background:#222;padding:20px;margin:20px;border-radius:10px}
