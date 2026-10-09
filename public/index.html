@@ -1,1 +1,151 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><title>SP500 Trade Assistant</title><link rel="stylesheet" href="style.css"></head><body><h1>SP500 Trade Assistant</h1><div class="grid"><div class="card"><h3>Bias</h3><div id="bias">Loading...</div></div><div class="card"><h3>VIX</h3><div id="vix"></div></div><div class="card"><h3>SP500</h3><div id="sp"></div></div><div class="card"><h3>Regime</h3><div id="regime"></div></div><div class="card"><h3>Divergence</h3><div id="div"></div></div><div class="card"><h3>Action</h3><div id="action"></div></div></div><script src="app.js"></script></body></html>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>SP500 Trade Assistant</title>
+
+<style>
+body{
+    background:#0f1115;
+    color:white;
+    font-family:Segoe UI,sans-serif;
+    margin:20px;
+}
+
+h1{
+    margin-bottom:20px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:15px;
+}
+
+.card{
+    background:#1b1f27;
+    border-radius:12px;
+    padding:20px;
+}
+
+.label{
+    color:#aaa;
+    font-size:14px;
+}
+
+.value{
+    font-size:36px;
+    font-weight:bold;
+    margin-top:10px;
+}
+
+.green{color:#00d26a;}
+.red{color:#ff5555;}
+.orange{color:#ffb020;}
+.yellow{color:#ffd700;}
+
+.small{
+    font-size:18px;
+}
+</style>
+
+</head>
+<body>
+
+<h1>SP500 Trade Assistant</h1>
+
+<div class="grid">
+
+<div class="card">
+    <div class="label">Bias</div>
+    <div class="value" id="bias">Loading...</div>
+</div>
+
+<div class="card">
+    <div class="label">VIX</div>
+    <div class="value" id="vix">Loading...</div>
+</div>
+
+<div class="card">
+    <div class="label">SP500</div>
+    <div class="value" id="sp500">Loading...</div>
+</div>
+
+<div class="card">
+    <div class="label">Regime</div>
+    <div class="value small" id="regime">Loading...</div>
+</div>
+
+<div class="card">
+    <div class="label">Divergence</div>
+    <div class="value small" id="divergence">Loading...</div>
+</div>
+
+<div class="card">
+    <div class="label">Action</div>
+    <div class="value small" id="action">Loading...</div>
+</div>
+
+</div>
+
+<script>
+
+async function loadDashboard(){
+
+    try {
+
+        const response =
+            await fetch('/api/dashboard');
+
+        const data =
+            await response.json();
+
+        if(data.error){
+
+            document.getElementById('bias').innerHTML =
+                'DATA ERROR';
+
+            document.getElementById('action').innerHTML =
+                data.error;
+
+            return;
+        }
+
+        document.getElementById('vix').innerHTML =
+            data.vix ?? '-';
+
+        document.getElementById('sp500').innerHTML =
+            data.sp500 ?? '-';
+
+        document.getElementById('bias').innerHTML =
+            data.bias ?? 'WAIT';
+
+        document.getElementById('regime').innerHTML =
+            data.regime ?? 'UNKNOWN';
+
+        document.getElementById('divergence').innerHTML =
+            data.divergence ?? 'NONE';
+
+        document.getElementById('action').innerHTML =
+            data.action ?? 'WAIT';
+
+    }
+    catch(err){
+
+        document.getElementById('bias').innerHTML =
+            'OFFLINE';
+
+        document.getElementById('action').innerHTML =
+            err.message;
+    }
+
+}
+
+loadDashboard();
+
+setInterval(loadDashboard, 60000);
+
+</script>
+
+</body>
+</html>
