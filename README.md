@@ -1,10 +1,17 @@
 # SP500 Trade Assistant
 
-GitHub-ready single page dashboard for SP500/VIX monitoring.
+## Install
+npm install
 
-## Files
-- index.html
-- style.css
-- app.js
+## Run
+npm start
 
-Open index.html or serve with a local web server.
+Open http://localhost:3000
+
+Features:
+- Live Yahoo Finance VIX
+- Live SP500
+- Risk score
+- Bias engine
+- Action engine
+- Ready for Render deployment
