@@ -1,28 +1,20 @@
-
 const express=require('express');
-const cors=require('cors');
 const yahooFinance=require('yahoo-finance2').default;
 const app=express();
-app.use(cors());
 app.use(express.static('public'));
-
-async function q(symbol){
- const r=await yahooFinance.quote(symbol);
- return r;
-}
 app.get('/api/dashboard', async(req,res)=>{
  try{
-  const vix=await q('^VIX');
-  const sp=await q('^GSPC');
-  let vixScore=0;
-  if(vix.regularMarketPrice<16.5) vixScore+=2;
-  if(vix.regularMarketChange<0) vixScore+=3;
-  let spScore=0;
-  if(sp.regularMarketChange>0) spScore+=3;
-  if(sp.regularMarketPrice>sp.regularMarketOpen) spScore+=2;
-  const bias=(vixScore>=3 && spScore>=3)?'LONG':(vixScore<3&&spScore<3)?'SHORT':'WAIT';
-  const confidence=Math.min(95,50+vixScore*5+spScore*5);
-  res.json({vix:vix.regularMarketPrice,sp500:sp.regularMarketPrice,vixScore,spScore,bias,confidence});
+ const vix=await yahooFinance.quote('^VIX');
+ const sp=await yahooFinance.quote('^GSPC');
+ const v=vix.regularMarketPrice||0;
+ const vc=((vix.regularMarketChangePercent)||0);
+ const spc=((sp.regularMarketChangePercent)||0);
+ let risk=v<16.5&&vc<0?'RISK ON':v<18.5?'NEUTRAL':'RISK OFF';
+ let bias=spc>0?'LONG':spc<0?'SHORT':'WAIT';
+ let regime=(spc>0&&vc<0)?'TREND BULL':(spc<0&&vc>0)?'TREND BEAR':'TRANSITION';
+ let conf=Math.min(95,Math.round(50+Math.abs(spc)*10+Math.abs(vc)*2));
+ let action=bias==='LONG'&&risk!=='RISK OFF'?'BUY PULLBACKS':bias==='SHORT'&&risk==='RISK OFF'?'SELL RALLIES':'WAIT';
+ res.json({vix:v,vixChange:vc,spx:sp.regularMarketPrice,spxChange:spc,risk,bias,regime,confidence:conf,action});
  }catch(e){res.status(500).json({error:e.message})}
 });
-app.listen(process.env.PORT||3000,()=>console.log('running'));
+app.listen(process.env.PORT||3000);

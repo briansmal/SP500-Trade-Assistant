@@ -1,17 +1,8 @@
 # SP500 Trade Assistant
 
-## Install
-npm install
+Setup:
+1. npm install
+2. npm start
+3. Open http://localhost:3000
 
-## Run
-npm start
-
-Open http://localhost:3000
-
-Features:
-- Live Yahoo Finance VIX
-- Live SP500
-- Risk score
-- Bias engine
-- Action engine
-- Ready for Render deployment
+Deploy on Render as a Node Web Service.
