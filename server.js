@@ -17,7 +17,11 @@ async function getQuote(symbol) {
     const url =
         `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${API_KEY}`;
 
-    const response = await axios.get(url);
+    const response = await axios.get(url, {
+        timeout: 10000
+    });
+
+    console.log("FINNHUB RESPONSE:", JSON.stringify(response.data));
 
     return response.data;
 }
