@@ -1,4 +1,4 @@
-async function updateDashboard() {
+async function loadDashboard() {
 
     try {
 
@@ -8,23 +8,38 @@ async function updateDashboard() {
         const data =
             await response.json();
 
-        document.getElementById('sp500').innerHTML =
+        document.getElementById('bias').innerText =
+            data.bias;
+
+        document.getElementById('sp500').innerText =
             data.sp500;
 
-        document.getElementById('action').innerHTML =
-            data.change > 0
-                ? '🟢 BUY BIAS'
-                : '🔴 SELL BIAS';
+        document.getElementById('action').innerText =
+            data.action;
 
-    } catch(error) {
+        document.getElementById('regime').innerText =
+            data.bias === 'LONG'
+                ? 'TREND BULL'
+                : 'TREND BEAR';
+
+        document.getElementById('divergence').innerText =
+            'NONE';
+
+        document.getElementById('vix').innerText =
+            'Coming Soon';
+
+    }
+    catch (error) {
 
         console.error(error);
 
-        document.getElementById('action').innerHTML =
-            '⚠ DATA ERROR';
+        document.getElementById('bias').innerText =
+            'ERROR';
+
     }
+
 }
 
-updateDashboard();
+loadDashboard();
 
-setInterval(updateDashboard, 60000);
+setInterval(loadDashboard, 60000);
