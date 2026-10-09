@@ -1,31 +1,53 @@
+const express = require("express");
 const axios = require("axios");
+const path = require("path");
+
+const app = express();
 
 const API_KEY = process.env.FINNHUB_API_KEY;
 
+app.use(express.static("public"));
+
+app.get("/api/health", (req, res) => {
+    res.json({ status: "ok" });
+});
+
 async function getQuote(symbol) {
+
     const url =
-      `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${API_KEY}`;
+        `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${API_KEY}`;
 
     const response = await axios.get(url);
 
     return response.data;
 }
 
-app.get('/api/dashboard', async (req, res) => {
+app.get("/api/dashboard", async (req, res) => {
 
     try {
 
-        const sp500 = await getQuote('SPY');
+        const spy = await getQuote("SPY");
+
+        let bias = "WAIT";
+        let action = "WAIT";
+
+        if (spy.c > spy.pc) {
+            bias = "LONG";
+            action = "BUY PULLBACKS";
+        }
+
+        if (spy.c < spy.pc) {
+            bias = "SHORT";
+            action = "SELL RALLIES";
+        }
 
         res.json({
-            sp500: sp500.c,
-            previousClose: sp500.pc,
-            dayHigh: sp500.h,
-            dayLow: sp500.l,
-            dayOpen: sp500.o,
-            change:
-                (((sp500.c - sp500.pc) /
-                sp500.pc) * 100).toFixed(2)
+            bias,
+            action,
+            sp500: spy.c,
+            previousClose: spy.pc,
+            dayHigh: spy.h,
+            dayLow: spy.l
         });
 
     } catch (err) {
@@ -38,4 +60,10 @@ app.get('/api/dashboard', async (req, res) => {
 
     }
 
+});
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+    console.log(`Server running on ${PORT}`);
 });
